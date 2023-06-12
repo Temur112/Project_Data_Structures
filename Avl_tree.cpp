@@ -1,4 +1,13 @@
 #include <iostream>
+#include <vector>
+#include <bits/stdc++.h>
+#include <sstream>
+#include <fstream>
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
+
 
 // Structure for AVL tree node
 struct Node {
@@ -116,21 +125,66 @@ void inorderTraversal(Node* root) {
     inorderTraversal(root->right);
 }
 
+std::vector<int> nums(){
+    std::vector<int> f;
+    ifstream inputFile;
+    inputFile.open("hltv_playerStats-complete.csv");
+
+    string line = "";
+    while(getline(inputFile, line)){
+        string nickName;
+        int kills;
+        string temps;
+        //nick,country,stats_link,teams,maps_played,rounds_played,kd_difference,kd_ratio,rating,total_kills,headshot_percentage,total_deaths,grenade_damage_per_round,kills_per_round,assists_per_round,deaths_per_round,teammate_saved_per_round,saved_by_teammate_per_round,kast,impact
+        stringstream inputstring(line);
+        getline(inputstring, nickName, ',');
+        for(int i = 0; i < 7; i++){
+      if(i == 2){
+        getline(inputstring, temps, ']');
+        getline(inputstring, temps, ',');
+        }
+        getline(inputstring, temps, ',');
+        }
+    
+    getline(inputstring, temps, ',');
+    
+    kills = atoi(temps.c_str());
+    if(kills != 0){
+        f.push_back(kills);
+    }
+    
+    
+    }
+    return f;
+}
+
 // Main function
 int main() {
     Node* root = nullptr;
+    auto start = high_resolution_clock::now();
+    vector<int> arr = nums();
+    int n = arr.size();
+    
+    for(int i = 0;i < n; i++){
+        root = insertNode(root, arr[i]);
+    }
+    
 
     // Insert nodes into the AVL tree
-    root = insertNode(root, 10);
-    root = insertNode(root, 20);
-    root = insertNode(root, 30);
-    root = insertNode(root, 40);
-    root = insertNode(root, 50);
-    root = insertNode(root, 25);
-
+    // root = insertNode(root, 10);
+    // root = insertNode(root, 20);
+    // root = insertNode(root, 30);
+    // root = insertNode(root, 40);
+    // root = insertNode(root, 50);
+    // root = insertNode(root, 25);
+    
     // Print the AVL tree
     std::cout << "Inorder traversal of AVL tree: ";
     inorderTraversal(root);
+    auto stop = high_resolution_clock::now();
+
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout<<"time taken for traversing avl  tree with size: "<<n<<" is "<<duration.count()<<endl; 
 
     return 0;
 }
